@@ -1,5 +1,4 @@
-from random import choice, randint
-
+from random import randint
 import pygame
 
 # Константы для размеров поля и сетки:
@@ -33,13 +32,12 @@ SPEED = 20
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
 
 # Заголовок окна игрового поля:
-pygame.display.set_caption("Змейка")
+pygame.display.set_caption('Змейка')
 
 # Настройка времени:
 clock = pygame.time.Clock()
 
 
-# Тут опишите все классы игры.
 class GameObject:
     """
     Базовый класс для всех игровых объектов.
@@ -50,11 +48,27 @@ class GameObject:
     """
 
     def __init__(self, position=(0, 0), body_color=(0, 0, 0)):
+        """
+        Инициализирует базовые атрибуты объекта.
+        
+        Args:
+            position (tuple): Позиция объекта (по умолчанию (0, 0))
+            body_color (tuple): Цвет объекта (по умолчанию черный)
+        """
         self.position = position
         self.body_color = body_color
 
     def draw(self, surface):
-        raise NotImplementedError("Метод должен бфть переопределен")
+        """
+        Метод для отрисовки объекта на поверхности.
+        
+        Args:
+            surface: Поверхность для отрисовки (pygame.Surface)
+            
+        Note:
+            Этот метод должен быть переопределен в дочерних классах.
+        """
+        raise NotImplementedError('Метод draw должен быть переопределен')
 
 
 class Apple(GameObject):
@@ -67,14 +81,22 @@ class Apple(GameObject):
     """
 
     def __init__(self, field_size, position=None):
+        """
+        Инициализирует яблоко.
+        
+        Args:
+            field_size (tuple): Размер игрового поля
+            position (tuple, optional): Начальная позиция яблока
+        """
         super().__init__(body_color=APPLE_COLOR)
         self.field_size = field_size
         self.field_width, self.field_height = field_size
+        
         if position:
             self.position = position
         else:
             self.randomize_position()
-
+    
     def randomize_position(self):
         """Устанавливает случайную позицию яблока в пределах игрового поля."""
         x = randint(0, self.field_width - 1) * GRID_SIZE
@@ -102,6 +124,13 @@ class Snake(GameObject):
     """
 
     def __init__(self, start_position, body_color=SNAKE_COLOR):
+        """
+        Инициализирует змейку.
+        
+        Args:
+            start_position (tuple): Начальная позиция головы змейки
+            body_color (tuple): Цвет змейки (по умолчанию зеленый)
+        """
         super().__init__(position=start_position, body_color=body_color)
         self.length = 1
         self.positions = [start_position]
@@ -110,10 +139,7 @@ class Snake(GameObject):
         self.last = None
 
     def update_direction(self):
-        """
-        Метод обновления направления
-        после нажатия на кнопку
-        """
+        """Обновляет направление движения змейки после нажатия на кнопку."""
         if self.next_direction:
             self.direction = self.next_direction
             self.next_direction = None
@@ -125,6 +151,8 @@ class Snake(GameObject):
         dir_x, dir_y = self.direction
         new_head_x = head_x + dir_x * GRID_SIZE
         new_head_y = head_y + dir_y * GRID_SIZE
+        
+        # Телепортация через стены
         if new_head_x < 0:
             new_head_x = SCREEN_WIDTH - GRID_SIZE
         elif new_head_x >= SCREEN_WIDTH:
@@ -133,6 +161,7 @@ class Snake(GameObject):
             new_head_y = SCREEN_HEIGHT - GRID_SIZE
         elif new_head_y >= SCREEN_HEIGHT:
             new_head_y = 0
+            
         new_head = (new_head_x, new_head_y)
         self.positions.insert(0, new_head)
         if len(self.positions) > self.length:
@@ -200,44 +229,65 @@ def handle_keys(game_object):
 
 
 def check_collision(snake, apple):
-    # Проверяет, съела ли змейка яблоко.
+    """
+    Проверяет, съела ли змейка яблоко.
+    """
     return snake.get_head_position() == apple.position
 
 
 def check_self_collision(snake):
+    """
+    Проверяет, столкнулась ли змейка с самой собой.
+    
+    Args:
+        snake (Snake): Объект змейки
+        
+    Returns:
+        bool: True если змейка столкнулась с собой, иначе False
+    """
     head_position = snake.get_head_position()
-    # Проверяем, есть ли позиция головы в других сегментах
     return head_position in snake.positions[1:]
 
+
 def main():
-    # Инициализация PyGame:
+    """
+    Основная функция игры.
+    
+    Запускает игру и управляет основным игровым циклом.
+    """
     pygame.init()
-    # Тут нужно создать экземпляры классов.
+    
     field_size = (GRID_WIDTH, GRID_HEIGHT)
     start_position = (
         (SCREEN_WIDTH // 2) // GRID_SIZE * GRID_SIZE,
         (SCREEN_HEIGHT // 2) // GRID_SIZE * GRID_SIZE,
     )
+    
     snake = Snake(start_position)
     apple = Apple(field_size)
+    
     while True:
         clock.tick(SPEED)
+        
         handle_keys(snake)
         snake.update_direction()
         snake.move()
+        
         if check_collision(snake, apple):
             snake.length += 1
             apple.randomize_position()
             while apple.position in snake.positions:
                 apple.randomize_position()
+        
         if check_self_collision(snake):
             snake.reset(start_position)
             apple.randomize_position()
+        
         screen.fill(BOARD_BACKGROUND_COLOR)
         apple.draw()
         snake.draw()
         pygame.display.update()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
