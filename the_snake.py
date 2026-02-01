@@ -45,7 +45,6 @@ class GameObject:
     def __init__(self, position=(0, 0), body_color=(0, 0, 0)):
         """
         Инициализирует базовые атрибуты объекта.
-        
         Args:
             position (tuple): Позиция объекта (по умолчанию (0, 0))
             body_color (tuple): Цвет объекта (по умолчанию черный)
@@ -56,10 +55,8 @@ class GameObject:
     def draw(self, surface):
         """
         Метод для отрисовки объекта на поверхности.
-        
         Args:
-            surface: Поверхность для отрисовки (pygame.Surface)
-            
+            surface: Поверхность для отрисовки.
         Note:
             Этот метод должен быть переопределен в дочерних классах.
         """
@@ -72,7 +69,6 @@ class Apple(GameObject):
     def __init__(self, field_size, position=None):
         """
         Инициализирует яблоко.
-        
         Args:
             field_size (tuple): Размер игрового поля
             position (tuple, optional): Начальная позиция яблока
@@ -105,7 +101,6 @@ class Snake(GameObject):
     def __init__(self, start_position, body_color=SNAKE_COLOR):
         """
         Инициализирует змейку.
-        
         Args:
             start_position (tuple): Начальная позиция головы змейки
             body_color (tuple): Цвет змейки (по умолчанию зеленый)
@@ -183,7 +178,6 @@ class Snake(GameObject):
 def handle_keys(game_object):
     """
     Обрабатывает нажатия клавиш для изменения направления движения змейки.
-
     Args:
         game_object (Snake): Объект змейки, для которого обрабатываются клавиши
     """
@@ -205,11 +199,9 @@ def handle_keys(game_object):
 def check_collision(snake, apple):
     """
     Проверяет, съела ли змейка яблоко.
-    
     Args:
         snake (Snake): Объект змейки
         apple (Apple): Объект яблока
-        
     Returns:
         bool: True если змейка съела яблоко, иначе False
     """
@@ -219,10 +211,8 @@ def check_collision(snake, apple):
 def check_self_collision(snake):
     """
     Проверяет, столкнулась ли змейка с самой собой.
-    
     Args:
         snake (Snake): Объект змейки
-        
     Returns:
         bool: True если змейка столкнулась с собой, иначе False
     """
