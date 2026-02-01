@@ -33,7 +33,7 @@ SPEED = 20
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
 
 # Заголовок окна игрового поля:
-pygame.display.set_caption('Змейка')
+pygame.display.set_caption("Змейка")
 
 # Настройка времени:
 clock = pygame.time.Clock()
@@ -60,13 +60,13 @@ class GameObject:
         Note:
             Этот метод должен быть переопределен в дочерних классах.
         """
-        raise NotImplementedError('Метод draw должен быть переопределен')
+        raise NotImplementedError("Метод draw должен быть переопределен")
 
 
 class Apple(GameObject):
     """Класс для представления яблока в игре."""
 
-    def __init__(self, field_size, position=None):
+    def __init__(self, field_size=(GRID_WIDTH, GRID_HEIGHT), position=None):
         """
         Инициализирует яблоко.
         Args:
@@ -98,7 +98,11 @@ class Apple(GameObject):
 class Snake(GameObject):
     """Класс для представления змейки в игре."""
 
-    def __init__(self, start_position, body_color=SNAKE_COLOR):
+    def __init__(
+        self,
+        start_position=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2),
+        body_color=SNAKE_COLOR,
+    ):
         """
         Инициализирует змейку.
         Args:
@@ -165,8 +169,10 @@ class Snake(GameObject):
         """Возвращает позицию головы змейки."""
         return self.positions[0] if self.positions else (0, 0)
 
-    def reset(self, start_position):
+    def reset(self, start_position=None):
         """Сбрасывает змейку в начальное состояние."""
+        if start_position is None:
+            start_position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
         self.length = 1
         self.positions = [start_position]
         self.direction = RIGHT
@@ -256,5 +262,5 @@ def main():
         pygame.display.update()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
