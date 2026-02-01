@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+ENV PIP_ROOT_USER_ACTION=ignore
 # C extensions
 *.so
 
