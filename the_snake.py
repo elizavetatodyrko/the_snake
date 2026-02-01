@@ -33,14 +33,35 @@ SPEED = 20
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
 
 # Заголовок окна игрового поля:
-pygame.display.set_caption('Змейка')
+pygame.display.set_caption("Змейка")
 
 # Настройка времени:
 clock = pygame.time.Clock()
 
 
 # Тут опишите все классы игры.
-...
+class GameObject:
+    def __init__(self, position=(0, 0), body_color=(0, 0, 0)):
+        self.position = position
+        self.body_color = body_color
+
+    def draw(self, surface):
+        pass
+
+
+class Apple(GameObject):
+    def __init__(self, field_size, position=None):
+        super().__init__(body_color=(255, 0, 0))
+        self.field_size = field_size
+
+
+class Snake(GameObject):
+    def __init__(self, start_position, body_color=(0, 255, 0)):
+        super().__init__(position=start_position, body_color=body_color)
+        self.lenght = 1
+        self.positions = [start_position]
+        self.direction = (1, 0)
+        self.next_direction = None
 
 
 def main():
@@ -52,11 +73,11 @@ def main():
     # while True:
     #     clock.tick(SPEED)
 
-        # Тут опишите основную логику игры.
-        # ...
+    # Тут опишите основную логику игры.
+    # ...
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 
 
