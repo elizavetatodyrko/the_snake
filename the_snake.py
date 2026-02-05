@@ -68,19 +68,22 @@ class GameObject:
 class Apple(GameObject):
     """Класс для представления яблока в игре."""
 
-    def __init__(self, body_color=APPLE_COLOR):
+    def __init__(
+            self,
+            body_color=APPLE_COLOR,
+            occupied_positions=(CENTER_POSITION,)
+    ):
         """
         Инициализирует яблоко.
         Args:
             body_color (tuple): Цвет яблока (по умолчанию APPLE_COLOR)
+            occupied_positions (tuple): Позиции, занятые другими объектами
         """
         super().__init__(body_color=body_color)
-        self.randomize_position()
+        self.randomize_position(occupied_positions)
 
-    def randomize_position(self, occupied_positions=None):
+    def randomize_position(self, occupied_positions):
         """Устанавливает случайную позицию яблока в пределах игрового поля."""
-        if occupied_positions is None:
-            occupied_positions = [CENTER_POSITION]
         while True:
             x = randint(0, GRID_WIDTH - 1) * GRID_SIZE
             y = randint(0, GRID_HEIGHT - 1) * GRID_SIZE
@@ -196,7 +199,7 @@ def main():
     pygame.init()
 
     snake = Snake()
-    apple = Apple()
+    apple = Apple(occupied_positions=snake.positions)
 
     while True:
         clock.tick(SPEED)
@@ -207,10 +210,10 @@ def main():
 
         if check_collision(snake, apple):
             snake.length += 1
-            apple.randomize_position()
+            apple.randomize_position(snake.positions)
         elif check_self_collision(snake):
             snake.reset()
-            apple.randomize_position()
+            apple.randomize_position(snake.positions)
 
         screen.fill(BOARD_BACKGROUND_COLOR)
         apple.draw()
